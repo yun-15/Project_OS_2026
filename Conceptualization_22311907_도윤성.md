@@ -3,8 +3,6 @@
 ## [ Revision history ]
 | 03/27/2026 | 1.0.0 | Initial conceptualization |
 
-**Projedt Title:**
-**Logo(optional)**
 
 ## 1. Business purpose
 ### 1.1. Project background
