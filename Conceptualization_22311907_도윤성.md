@@ -23,6 +23,7 @@
 실시간 뉴스 대응이 수익류롸 직결되는 개인투자자
 
 ## 2. System context diagram
+<img width="2604" height="570" alt="image" src="https://github.com/user-attachments/assets/b74aa774-affa-4f17-a45b-15ef19c90f48" />
 
  
 ## 3. Use case list
