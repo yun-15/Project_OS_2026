@@ -30,6 +30,8 @@
 ## 6.
 
 ## 7. References
-2025년 한국언론진흥재단 언론수용자 조사\
-(https://www.kpf.or.kr/front/research/consumerDetail.do?miv_pageNo=&miv_pageSize=&total_cnt=&LISTOP=&mode=W&seq=600224&link_g_topmenu_id=676f2f0f377b4b19840685a46f69a233&link_g_submenu_id=f193a96c92284493b56f35b5f0eb15e3&link_g_homepage=F&reg_stadt=&reg_enddt=&searchkey=all1&searchtxt=) \
-자본시장연구원, 개인투자자의 해외투자 특징 및 성과 분석\(https://www.kcmi.re.kr/report/report_view?report_no=2254#:~:text=%EC%A0%84%EC%B2%B4%20%EA%B0%9C%EC%9D%B8%ED%88%AC%EC%9E%90%EC%9E%90%EC%9D%98%20%EC%9D%BC%ED%8F%89%EA%B7%A0%20%EB%B3%B4%EC%9C%A0%EA%B8%88%EC%95%A1%EC%9D%80%20%EC%95%BD%205%2C196%EB%A7%8C%EC%9B%90%EC%9D%B4%EB%A9%B0%2C%20%EC%9D%B4,%EC%97%B0%EB%A0%B9%EB%8C%80%EB%B3%84%EB%A1%9C%20%EA%B5%AD%EB%82%B4%EC%99%B8%20%ED%88%AC%EC%9E%90%EA%B8%88%EC%95%A1%20%EB%B9%84%EC%A4%91%EC%97%90%EC%84%9C%EB%8A%94%20%EB%9A%9C%EB%A0%B7%ED%95%9C%20%EC%B0%A8%EC%9D%B4%EA%B0%80%20%EB%82%98%ED%83%80%EB%82%9C%EB%8B%A4.)
+한국예탁결제원 (2025), "2024년 12월 결산 상장법인 주식 소유자 현황 및 해외증권 순매수 추이"\
+한국언론진흥재단 (2025), "언론수용자 조사" \
+한국언론진흥재단 (2022), "언론수용자 조사"
+
+
