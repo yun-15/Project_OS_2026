@@ -30,5 +30,5 @@
 ## 6.
 
 ## 7. References
-2025년 한국언론진흥재단 언론수용자 조사
+2025년 한국언론진흥재단 언론수용자 조사(https://www.kpf.or.kr/front/research/consumerDetail.do?miv_pageNo=&miv_pageSize=&total_cnt=&LISTOP=&mode=W&seq=600224&link_g_topmenu_id=676f2f0f377b4b19840685a46f69a233&link_g_submenu_id=f193a96c92284493b56f35b5f0eb15e3&link_g_homepage=F&reg_stadt=&reg_enddt=&searchkey=all1&searchtxt=)\
 자본시장연구원, 개인투자자의 해외투자 특징 및 성과 분석
