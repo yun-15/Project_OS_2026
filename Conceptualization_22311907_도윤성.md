@@ -27,17 +27,25 @@
  
 ## 3. Use case list
 
-| Actor |  |
+### 1) 관심사/키워드 지정
+| Actor | 사용자 |
 | :---: | :---: |
-| Description |  |
-\
-| Actor |  |
+| Description | 키워드를 입력해 분석 기반을 마련 |
+
+### 2) AI Summary
+| Actor | 시스템 |
 | :---: | :---: |
-| Description |  |
-\
-| Actor |  |
+| Description | 관련 뉴스 발생 시 핵심 포인트 요약 및 예상 변동성 알림 |
+
+### 3) Contextual Learning
+| Actor | 사용자 |
 | :---: | :---: |
-| Description |  |
+| Description | 특정 테마 뉴스 10개를 묶어 시장 흐름 리포트를 생성 |
+
+### 4) Risk Monitoring
+| Actor | 시스템 |
+| :---: | :---: |
+| Description | 전체 포트폴리오의 뉴스 감정 점수를 합산해 투자 위험도를 자동으로 경고 |
 
 ## 4. Concept of operation
 
@@ -64,6 +72,15 @@
 | Approach | 특정 종목이나 산업의 최근 뉴스 10개를 종합하여 AI가 전체적인 리포트를 작성 |
 | Dynamics | 사용자가'/learning' 명령어를 입력할 경우 실행 |
 | Goals | 투자자의 금융 문해력 향상 |
+
+### 4) Risk Monitoring
+
+| Purpose | 투자 위험도 경고 |
+| :---: | :---: |
+| Approach | 시스템이 실시간으로 수집되는 뉴스들의 impact score를 취합해 특정 종목에 부정적 기류가 임계치를 넘을 경우 경고 알림 생성 |
+| Dynamics | 보유 종목 관련 악재 뉴스가 단기간에 집중 발생하거나 시장 변동성이 급증할 때 시스템에 의해 자동 실행 |
+| Goals | 사용자가 인지하지 못한 리스크를 사전에 통보해 자산 손실 최소화 및 안전한 투자 환경 조성 |
+
 
 ## 5. Problem Statement
 AI의 요약 결과가 원문과 다를 수 있는 '할루시네이션' 리스크가 존재해 이를 극복하기 위해 항상 원문 뉴스 기사 링크를 함께 제공합니다. 무료 API 사용 시 데이터 갱신 주기에 지연이 발생할 수 있습니다.
