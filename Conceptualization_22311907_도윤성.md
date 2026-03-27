@@ -10,7 +10,7 @@
 ## 1. Business purpose
 ### 1.1. Project background
 
-<img width="243" height="138" alt="image" src="https://github.com/user-attachments/assets/6694c2b6-67ff-43c0-a13f-8ace4049babd" />
+<img width="365" height="207" alt="image" src="https://github.com/user-attachments/assets/6694c2b6-67ff-43c0-a13f-8ace4049babd" />
 <img width="189" height="320" alt="image" src="https://github.com/user-attachments/assets/b1b4b820-39a9-46ce-b6de-623b369550ab" />
 
 2024년 12월 기준, 국내 상장법인 주식을 보유한 개인투자자는 1,410만 명에 도달하며 '전국민 투자 시대'가 도래했습니다. 이는 전체 투자자의 99.1%를 차지하는 수치로 개인투자자의 수가 증가했음을 알려줍니다. 코로나19 이후 개인투자자들은 국내 주식에 머물지 않고 미국 등 해외 증시로 눈을 돌려 이에 따라 외신 뉴스 및 글로벌 공시 데이터에 대한 실시간 수요가 급증했습니다. 2025년 기준 조사에 따르면 인터넷 이용률은 94.9%에 달하며, 그 중 모바일 인터넷 뉴스 이용률은 70.9%로 전통 매체를 완전히 대체하고 있습니다. 또한, 투자자의 61.9%가 뉴스가 투자에 도움이 된다고 응답했으나 하루에 쏟아지는 수만 건의 기사 중 핵심 정보를 선별하는 데 소요되는 시간적 비용이 기회비용을 초과하는 정보 과부화 상태에 직면해 있습니다. 
