@@ -3,7 +3,7 @@
 ## [ Revision history ]
 
 | Revision date | Version # | Description |
-| ------------- | --------- |------------ |
+| :---: | :---: | :---: |
 |   27/03/2026  | 1.0.0 | 초안 |
 
 
