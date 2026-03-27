@@ -7,6 +7,9 @@
 **Logo(optional)**
 
 ## 1. Business purpose
+### 1.1. Project background
+
+### 1.2. Goal
 
 ## 2. System context diagram
 
