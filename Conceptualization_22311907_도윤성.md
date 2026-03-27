@@ -1,7 +1,11 @@
 # 1. Conceptualization
 
 ## [ Revision history ]
-| 03/27/2026 | 1.0.0 | Initial conceptualization |
+
+| Revision date | Version # | Description |
+| ------------- | --------- |------------ |
+|   27/03/2026  | 1.0.0 | 초안 |
+
 
 
 ## 1. Business purpose
