@@ -99,7 +99,7 @@
 | Goals | 장기적인 서비스 이용을 위한 시스템 신뢰성 및 성능 유지 |
 
 
-## 5. Problem Statement\
+## 5. Problem Statement
 
 ## 6. Glossary
 
