@@ -5,6 +5,7 @@
 | Revision date | Version # | Description |
 | :---: | :---: | :---: |
 |   27/03/2026  | 1.0.0 | 초안 |
+|   07/05/2026  | 2.0.0 | 주제 변경: 개인형 수면 데이터 분석 및 시각화 시스템 |
 
 
 ## 1. Business purpose
