@@ -1,0 +1,436 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sync Rhythm - Web Prototype</title>
+    <style>
+        body { margin: 0; padding: 0; font-family: 'Malgun Gothic', sans-serif; background-color: #f5f7fa; display: flex; height: 100vh; overflow: hidden; }
+
+        #app-wrapper { display: flex; width: 100%; height: 100%; }
+
+        .sidebar { width: 320px; background-color: #2c3e50; color: white; padding: 20px; box-sizing: border-box; display: flex; flex-direction: column; gap: 15px; box-shadow: 2px 0 5px rgba(0,0,0,0.1); z-index: 10; overflow-y: auto; }
+        .sidebar h2 { font-size: 18px; margin-top: 0; border-bottom: 1px solid #455a64; padding-bottom: 10px; display: flex; justify-content: space-between; align-items: center;}
+        
+        .control-group { display: flex; flex-direction: column; gap: 5px; }
+        .control-group label { font-size: 13px; font-weight: bold; color: #b0bec5; }
+        .control-group input[type="date"] { padding: 8px; border-radius: 4px; border: 1px solid #455a64; background: #34495e; color: white; }
+        
+        .time-select-group { display: flex; gap: 10px; align-items: center; }
+        .time-select-group select { padding: 8px; border-radius: 4px; border: 1px solid #455a64; background: #34495e; color: white; font-weight: bold; flex: 1; outline: none; cursor: pointer; }
+        .time-select-group span { font-size: 14px; font-weight: bold; color: #ecf0f1; }
+
+        .score-group { display: flex; justify-content: space-between; }
+        .score-btn { width: 40px; height: 40px; border-radius: 50%; background: #34495e; border: 2px solid #455a64; color: white; cursor: pointer; font-weight: bold; transition: 0.2s; }
+        .score-btn.selected { background: #4CAF50; border-color: #4CAF50; transform: scale(1.1); }
+        
+        .btn-group { display: flex; gap: 10px; margin-top: 10px; }
+        .btn-group button { flex: 1; padding: 10px; border: none; border-radius: 4px; cursor: pointer; font-weight: bold; transition: background 0.2s; }
+        .btn-save { background-color: #3498db; color: white; }
+        .btn-save:hover { background-color: #2980b9; }
+        .btn-delete { background-color: #e74c3c; color: white; }
+        .btn-delete:hover { background-color: #c0392b; }
+
+        .main-content { flex: 1; display: flex; flex-direction: column; background: white; }
+
+        .nav-tabs { display: flex; background: #ecf0f1; border-bottom: 1px solid #bdc3c7; }
+        .nav-tab { padding: 15px 30px; cursor: pointer; font-weight: bold; color: #7f8c8d; border-bottom: 3px solid transparent; transition: 0.2s; }
+        .nav-tab:hover { background-color: #e0e6ed; }
+        .nav-tab.active { color: #2c3e50; border-bottom: 3px solid #3498db; background: white; }
+
+        .view { display: none; padding: 40px; box-sizing: border-box; overflow-y: auto; height: 100%; }
+        .view.active { display: block; }
+        .view-title { margin-top: 0; font-size: 24px; color: #333; margin-bottom: 20px; }
+
+        .calendar-header { display: flex; justify-content: center; align-items: center; margin-bottom: 20px; font-size: 20px; font-weight: bold;}
+        .calendar-grid { display: grid; grid-template-columns: repeat(7, 1fr); border-top: 2px solid #333; border-left: 2px solid #333; }
+        .cal-header-cell { padding: 10px; text-align: center; font-weight: bold; background: #f9f9f9; border-right: 2px solid #333; border-bottom: 2px solid #333; }
+        .cal-header-cell.sun { color: #e74c3c; }
+        .cal-header-cell.sat { color: #3498db; }
+        
+        .cal-cell { min-height: 100px; padding: 5px; border-right: 2px solid #333; border-bottom: 2px solid #333; display: flex; flex-direction: column; cursor: pointer; transition: background 0.2s; }
+        .cal-cell:not(.empty):hover { background: #f1f8ff; }
+        .cal-date { font-weight: bold; margin-bottom: auto; }
+        .cal-data { font-size: 14px; font-weight: bold; color: #2c3e50; text-align: center; padding: 5px; border-radius: 4px; margin-top: 5px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
+        .cal-data.score-good { background-color: #d5f5e3; color: #196f3d; }
+        .cal-data.score-bad { background-color: #fdedec; color: #922b21; }
+
+        .analysis-header-controls { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+        .week-selector { padding: 8px 15px; font-size: 16px; font-weight: bold; border-radius: 6px; border: 2px solid #3498db; outline: none; cursor: pointer; color: #2c3e50; background: white; }
+        
+        .analysis-summary { background: #f8f9f9; padding: 20px; border-radius: 8px; border: 1px solid #ddd; margin-bottom: 30px; font-size: 18px; font-weight: bold; text-align: center;}
+        .optimal-time { color: #3498db; font-size: 24px; }
+        
+        .chart-container { position: relative; border: 2px solid #333; height: 400px; padding: 20px 0 20px 50px; display: flex; }
+        .y-axis { position: absolute; left: 10px; top: 20px; bottom: 20px; display: flex; flex-direction: column; justify-content: space-between; font-size: 12px; font-weight: bold; color: #555;}
+        
+        .x-axis-col { flex: 1; display: flex; flex-direction: column; align-items: center; position: relative; }
+        .day-label { font-weight: bold; margin-bottom: 10px; }
+        .day-label.sun { color: #e74c3c; }
+        .day-label.sat { color: #3498db; }
+        
+        .sleep-bar-area { width: 100%; flex: 1; position: relative; border-left: 1px dashed #eee; }
+        
+        .sleep-bar { position: absolute; left: 50%; transform: translateX(-50%); width: 16px; background-color: #34495e; border-radius: 8px; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); box-shadow: 2px 2px 5px rgba(0,0,0,0.2); }
+        
+        #toast { position: fixed; bottom: -50px; left: 50%; transform: translateX(-50%); background: #2c3e50; color: white; padding: 12px 24px; border-radius: 20px; font-weight: bold; transition: bottom 0.3s; z-index: 100; box-shadow: 0 4px 6px rgba(0,0,0,0.3); }
+        #toast.show { bottom: 30px; }
+    </style>
+</head>
+<body>
+
+<div id="app-wrapper">
+    <div class="sidebar">
+        <h2>수면 기록 제어 패널</h2>
+        
+        <div class="control-group">
+            <label>입력/수정할 날짜</label>
+            <input type="date" id="ctrl-date">
+        </div>
+        
+        <div class="control-group">
+            <label>취침 시각</label>
+            <div class="time-select-group">
+                <select id="ctrl-sleep-h"></select><span>시</span>
+                <select id="ctrl-sleep-m"></select><span>분</span>
+            </div>
+        </div>
+        
+        <div class="control-group">
+            <label>기상 시각</label>
+            <div class="time-select-group">
+                <select id="ctrl-wake-h"></select><span>시</span>
+                <select id="ctrl-wake-m"></select><span>분</span>
+            </div>
+        </div>
+        
+        <div class="control-group">
+            <label>컨디션 점수 (1~5)</label>
+            <div class="score-group" id="ctrl-score-group">
+                <button class="score-btn" data-score="1" onclick="setScore(1)">1</button>
+                <button class="score-btn" data-score="2" onclick="setScore(2)">2</button>
+                <button class="score-btn" data-score="3" onclick="setScore(3)">3</button>
+                <button class="score-btn" data-score="4" onclick="setScore(4)">4</button>
+                <button class="score-btn selected" data-score="5" onclick="setScore(5)">5</button>
+            </div>
+        </div>
+        
+        <div class="btn-group">
+            <button class="btn-save" onclick="saveData()">저장/수정</button>
+            <button class="btn-delete" onclick="deleteData()">삭제</button>
+        </div>
+    </div>
+
+    <div class="main-content">
+        <div class="nav-tabs">
+            <div class="nav-tab active" onclick="switchTab('view-calendar')">수면 캘린더</div>
+            <div class="nav-tab" onclick="switchTab('view-analysis')">주간 분석 리포트</div>
+        </div>
+
+        <div id="view-calendar" class="view active">
+            <h2 class="view-title">월간 수면 분포</h2>
+            <div class="calendar-header" id="calendar-header">2026년 6월</div>
+            <div class="calendar-grid" id="calendar-grid"></div>
+        </div>
+
+        <div id="view-analysis" class="view">
+            <div class="analysis-header-controls">
+                <h2 class="view-title" style="margin: 0;">주간 생체리듬 시각화</h2>
+                <select id="week-selector" class="week-selector" onchange="renderAnalysis()"></select>
+            </div>
+            
+            <div class="analysis-summary">
+                해당 주차의 최적 수면 시간(★4~5점 기준)은<br>
+                <span class="optimal-time" id="optimal-time-text">데이터 부족</span> 입니다.
+            </div>
+            
+            <div class="chart-container">
+                <div class="y-axis">
+                    <span>18:00</span><span>21:00</span><span>24:00</span><span>03:00</span><span>06:00</span><span>09:00</span><span>12:00</span>
+                </div>
+                <div class="x-axis-col"><div class="day-label sun" id="day-lbl-0">S</div><div class="sleep-bar-area" id="bar-0"></div></div>
+                <div class="x-axis-col"><div class="day-label" id="day-lbl-1">M</div><div class="sleep-bar-area" id="bar-1"></div></div>
+                <div class="x-axis-col"><div class="day-label" id="day-lbl-2">T</div><div class="sleep-bar-area" id="bar-2"></div></div>
+                <div class="x-axis-col"><div class="day-label" id="day-lbl-3">W</div><div class="sleep-bar-area" id="bar-3"></div></div>
+                <div class="x-axis-col"><div class="day-label" id="day-lbl-4">T</div><div class="sleep-bar-area" id="bar-4"></div></div>
+                <div class="x-axis-col"><div class="day-label" id="day-lbl-5">F</div><div class="sleep-bar-area" id="bar-5"></div></div>
+                <div class="x-axis-col"><div class="day-label sat" id="day-lbl-6">S</div><div class="sleep-bar-area" id="bar-6"></div></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="toast">알림 메시지</div>
+
+<script>
+    let appDB = {
+        '2026-06-01': { sleep: '23:00', wake: '06:30', score: 4, duration: 450 },
+        '2026-06-02': { sleep: '01:00', wake: '07:00', score: 2, duration: 360 },
+        '2026-06-03': { sleep: '22:30', wake: '07:00', score: 5, duration: 510 }
+    };
+    let currentScore = 5;
+
+    function initTimeSelectors() {
+        let hOpts = '';
+        for(let i=0; i<24; i++) hOpts += `<option value="${String(i).padStart(2,'0')}">${String(i).padStart(2,'0')}</option>`;
+        
+        let mOpts = '';
+        for(let i=0; i<60; i+=5) mOpts += `<option value="${String(i).padStart(2,'0')}">${String(i).padStart(2,'0')}</option>`;
+        
+        document.getElementById('ctrl-sleep-h').innerHTML = hOpts;
+        document.getElementById('ctrl-sleep-m').innerHTML = mOpts;
+        document.getElementById('ctrl-wake-h').innerHTML = hOpts;
+        document.getElementById('ctrl-wake-m').innerHTML = mOpts;
+    }
+
+    function setTimeSelects(type, timeStr) {
+        let [h, m] = timeStr.split(':');
+        document.getElementById(`ctrl-${type}-h`).value = h;
+        document.getElementById(`ctrl-${type}-m`).value = m; 
+    }
+    
+    function getTimeFromSelects(type) {
+        return document.getElementById(`ctrl-${type}-h`).value + ':' + document.getElementById(`ctrl-${type}-m`).value;
+    }
+
+    function showToast(msg) {
+        const toast = document.getElementById('toast');
+        toast.innerText = msg;
+        toast.classList.add('show');
+        setTimeout(() => toast.classList.remove('show'), 2000);
+    }
+
+    function setScore(score) {
+        currentScore = score;
+        document.querySelectorAll('.score-btn').forEach(btn => btn.classList.remove('selected'));
+        document.querySelector(`.score-btn[data-score="${score}"]`).classList.add('selected');
+    }
+
+    function calculateDurationMinutes(sleep, wake) {
+        let [sh, sm] = sleep.split(':').map(Number);
+        let [wh, wm] = wake.split(':').map(Number);
+        let sleepTotal = sh * 60 + sm;
+        let wakeTotal = wh * 60 + wm;
+        if (wakeTotal < sleepTotal) wakeTotal += 24 * 60; 
+        return wakeTotal - sleepTotal;
+    }
+
+    function saveData() {
+        const date = document.getElementById('ctrl-date').value;
+        const sleep = getTimeFromSelects('sleep');
+        const wake = getTimeFromSelects('wake');
+        
+        if(!date || !sleep || !wake) { alert("입력되지 않은 항목이 있습니다."); return; }
+        
+        appDB[date] = { sleep: sleep, wake: wake, score: currentScore, duration: calculateDurationMinutes(sleep, wake) };
+        showToast("수면 기록이 저장되었습니다.");
+        
+        updateWeekDropdown();
+        updateAllViews();
+    }
+
+    function deleteData() {
+        const date = document.getElementById('ctrl-date').value;
+        if(appDB[date]) {
+            delete appDB[date];
+            showToast("기록이 삭제되었습니다.");
+            updateAllViews();
+        } else {
+            alert("삭제할 데이터가 존재하지 않습니다.");
+        }
+    }
+
+    function loadToPanel(dateStr) {
+        document.getElementById('ctrl-date').value = dateStr;
+        let record = appDB[dateStr];
+
+        if(record) {
+            setTimeSelects('sleep', record.sleep);
+            setTimeSelects('wake', record.wake);
+            setScore(record.score);
+        } else {
+            setTimeSelects('sleep', "23:00");
+            setTimeSelects('wake', "07:00");
+            setScore(3);
+        }
+        updateWeekDropdown();
+        updateAllViews(); 
+    }
+
+    function renderCalendar() {
+        const dateVal = document.getElementById('ctrl-date').value;
+        const targetDate = new Date(dateVal || new Date());
+        const year = targetDate.getFullYear();
+        const month = targetDate.getMonth(); 
+
+        document.getElementById('calendar-header').innerText = `${year}년 ${month + 1}월`;
+
+        const grid = document.getElementById('calendar-grid');
+        grid.innerHTML = '';
+        
+        const days = ['S', 'M', 'T', 'W', 'T', 'F', 'S'];
+        days.forEach((d, i) => {
+            let className = 'cal-header-cell';
+            if(i === 0) className += ' sun';
+            if(i === 6) className += ' sat';
+            grid.innerHTML += `<div class="${className}">${d}</div>`;
+        });
+
+        const firstDayIndex = new Date(year, month, 1).getDay();
+        const totalDays = new Date(year, month + 1, 0).getDate();
+        
+        for(let i=0; i<firstDayIndex; i++) {
+            grid.innerHTML += `<div class="cal-cell empty" style="background:#fcfcfc; cursor:default;"></div>`;
+        }
+        
+        for(let day=1; day<=totalDays; day++) {
+            let monthStr = String(month + 1).padStart(2, '0');
+            let dayStr = String(day).padStart(2, '0');
+            let dateStr = `${year}-${monthStr}-${dayStr}`;
+            
+            let cellContent = `<div class="cal-date">${day}</div>`;
+            let record = appDB[dateStr];
+
+            if(record) {
+                const hours = Math.floor(record.duration / 60);
+                const mins = record.duration % 60;
+                const scoreClass = record.score >= 4 ? 'score-good' : 'score-bad';
+                cellContent += `<div class="cal-data ${scoreClass}">${hours}H ${mins}M<br>(★${record.score})</div>`;
+            }
+
+            grid.innerHTML += `<div class="cal-cell" onclick="loadToPanel('${dateStr}')">${cellContent}</div>`;
+        }
+
+        const totalRenderedCells = firstDayIndex + totalDays;
+        const remainingCells = totalRenderedCells % 7 === 0 ? 0 : 7 - (totalRenderedCells % 7);
+        for(let i=0; i<remainingCells; i++) {
+            grid.innerHTML += `<div class="cal-cell empty" style="background:#fcfcfc; cursor:default;"></div>`;
+        }
+    }
+
+    function updateWeekDropdown() {
+        const dateVal = document.getElementById('ctrl-date').value;
+        const targetDate = new Date(dateVal);
+        const year = targetDate.getFullYear();
+        const month = targetDate.getMonth();
+        
+        const selector = document.getElementById('week-selector');
+        selector.innerHTML = '';
+
+        let firstDay = new Date(year, month, 1);
+        let start = new Date(firstDay);
+        start.setDate(start.getDate() - start.getDay());
+        
+        let selectedValue = '';
+        
+        for (let i = 0; i < 6; i++) {
+            let end = new Date(start);
+            end.setDate(end.getDate() + 6);
+            
+            if (i > 0 && start.getMonth() > month && end.getMonth() > month) break;
+            
+            let startStr = start.toISOString().split('T')[0];
+            let label = `${month + 1}월 ${i + 1}주차 (${start.getMonth()+1}/${start.getDate()} ~ ${end.getMonth()+1}/${end.getDate()})`;
+            
+            let option = document.createElement('option');
+            option.value = startStr;
+            option.text = label;
+            selector.appendChild(option);
+            
+            if (targetDate >= start && targetDate <= end) {
+                selectedValue = startStr;
+            }
+            
+            start.setDate(start.getDate() + 7); 
+        }
+        
+        if(selectedValue) selector.value = selectedValue;
+    }
+
+    function timeToPercentage(timeStr) {
+        let [h, m] = timeStr.split(':').map(Number);
+        if (h < 18) h += 24; 
+        const totalMinutes = (h * 60 + m) - (18 * 60); 
+        const maxMinutes = 18 * 60; 
+        let percentage = (totalMinutes / maxMinutes) * 100;
+        return Math.min(Math.max(percentage, 0), 100); 
+    }
+
+    function renderAnalysis() {
+        const weekStartStr = document.getElementById('week-selector').value;
+        if(!weekStartStr) return; 
+
+        const startOfWeek = new Date(weekStartStr);
+        let weekDates = [];
+        
+        for(let i=0; i<7; i++) {
+            let d = new Date(startOfWeek);
+            d.setDate(startOfWeek.getDate() + i);
+            weekDates.push(d.toISOString().split('T')[0]); 
+        }
+        
+        let optimalDurations = [];
+        
+        for(let i=0; i<7; i++) {
+            const dStr = weekDates[i];
+            const record = appDB[dStr];
+            
+            const dayNum = new Date(dStr).getDate();
+            const daysArr = ['S', 'M', 'T', 'W', 'T', 'F', 'S'];
+            document.getElementById(`day-lbl-${i}`).innerText = `${daysArr[i]}(${dayNum})`;
+
+            const barArea = document.getElementById(`bar-${i}`);
+            barArea.innerHTML = '';
+            
+            if(record) {
+                if(record.score >= 4) {
+                    optimalDurations.push(record.duration);
+                }
+                
+                const startPercent = timeToPercentage(record.sleep);
+                const endPercent = timeToPercentage(record.wake);
+                const height = endPercent - startPercent;
+                
+                barArea.innerHTML = `<div class="sleep-bar" style="top: ${startPercent}%; height: ${height}%;"></div>`;
+            }
+        }
+        
+        const txtEl = document.getElementById('optimal-time-text');
+        if(optimalDurations.length > 0) {
+            let avg = optimalDurations.reduce((a, b) => a + b, 0) / optimalDurations.length;
+            let h = Math.floor(avg / 60);
+            let m = Math.floor(avg % 60);
+            txtEl.innerText = `${h}시간 ${m}분`;
+        } else {
+            txtEl.innerText = "데이터 부족 (4~5점 기록 없음)";
+        }
+    }
+
+    function switchTab(viewId) {
+        document.querySelectorAll('.nav-tab').forEach(tab => tab.classList.remove('active'));
+        event.target.classList.add('active');
+        document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+        document.getElementById(viewId).classList.add('active');
+    }
+
+    function updateAllViews() {
+        renderCalendar();
+        renderAnalysis();
+    }
+
+    initTimeSelectors();
+    document.getElementById('ctrl-date').value = '2026-06-03';
+    setTimeSelects('sleep', '22:30');
+    setTimeSelects('wake', '07:00');
+    
+    document.getElementById('ctrl-date').addEventListener('change', () => {
+        updateWeekDropdown();
+        updateAllViews();
+    });
+    
+    updateWeekDropdown();
+    updateAllViews();
+</script>
+
+</body>
+</html>
